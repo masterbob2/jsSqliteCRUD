@@ -27,17 +27,17 @@ function toBinString (arr) {
 
 
 // når siden loades
-window.onload = function () {
+window.addEventListener('load', function () {
     console.log("loading...");
     db = new SQL.Database(toBinArray(localStorage.getItem('minDB')));
     //db = new SQL.Database();
-}
+})
 
 // når siden "unloades", dvs at brugeren navigerer væk eller lukker vinduet/fanen
-window.onunload = function () {
+window.addEventListener('unload', function () {
     console.log("UNloading ...")
     localStorage.setItem('minDB', toBinString(db.export()) );
-}
+})
 
 window.addEventListener('load', function () {
     console.log("delayed running...")
@@ -46,7 +46,7 @@ window.addEventListener('load', function () {
 
     //Create the database
     // Run a query without reading the results
-    db.run("CREATE TABLE IF NOT EXISTS person (ID primary key, navn, loen);");
+    db.run("CREATE TABLE IF NOT EXISTS person (ID INTEGER primary key autoincrement, navn varchar(80), loen decimal);");
     // Insert two rows: (1,111) and (2,222)
     db.run("INSERT OR REPLACE INTO person VALUES (?, ?, ?), (?, ?, ?)",
         [   1, "Børge", 100000,
@@ -64,6 +64,7 @@ window.addEventListener('load', function () {
 
         console.log(JSON.stringify(row));
     }
+    refreshListe();
 });
 
 // **********************************************************************************************************
@@ -82,9 +83,9 @@ add.addEventListener('click', function () {
 addNewItem.addEventListener('click', function () {
     // insert
 
-    insertItem(nytID.value, nytNavn.value, nytLoen.value);
+    insertItem(nytNavn.value, nytLoen.value);
 
-    nytID.value = '';
+    //nytID.value = '';
     nytNavn.value = '';
     nytLoen.value = '';
 
@@ -136,7 +137,7 @@ closeShowItem.addEventListener('click', function () {
 
 // refresh indhold når siden
 function refreshListe(){
-
+    console.log("refreshing liste");
     // Slet alt, undtagen li-template'en
     liste.innerHTML = '<li class="template">'
         + '<button class="visPost" data-id="0">Vis</button>'
@@ -166,11 +167,10 @@ function refreshListe(){
 
         liste.appendChild(newItem);
     }
-
     registerVisKnapEvents();
-
 }
-window.addEventListener('load', refreshListe());
+
+//document.addEventListener('DOMContentLoaded', refreshListe);
 
 // **********************************************************************************************************
 // CRUD operationer
@@ -190,7 +190,7 @@ function getItem(id){
     return row;
 }
 
-function insertItem(id, navn, loen) {
-    console.log("indsætter " + id + navn + loen);
-    var stmt = db.run("INSERT INTO person (ID, navn, loen) VALUES (?, ?, ?)", [id, navn, loen]);
+function insertItem(navn, loen) {
+    console.log("indsætter " + navn + loen);
+    var stmt = db.run("INSERT INTO person (navn, loen) VALUES (?, ?)", [navn, loen]);
 }
