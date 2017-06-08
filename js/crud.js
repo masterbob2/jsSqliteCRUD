@@ -131,6 +131,85 @@ closeShowItem.addEventListener('click', function () {
     return false;
 })
 
+/*********** UPDATE ************/
+
+// tilføj-element-knappen
+function registerRedigerKnapEvents() { // først når alle knapperne er loaded
+    var redigerKnapper = document.querySelectorAll('.redigerPost')
+    for (var i = 0; i < redigerKnapper.length; i++) {
+        redigerKnapper[i].addEventListener('click', function () {
+            // vis form
+            redigerElement.style.display = 'block';
+
+            // READ DATA
+
+            var id = this.dataset.id;
+            var item = getItem(id);
+
+            redigerID.value = item.ID;
+            redigerNavn.value = item.navn;
+            redigerLoen.value = item.loen;
+        })
+    }
+
+}
+
+storeItem.addEventListener('click', function () {
+    // insert
+
+    updateItem(redigerID.value, redigerNavn.value, redigerLoen.value);
+
+    redigerID.value = '';
+    redigerNavn.value = '';
+    redigerLoen.value = '';
+
+    // skjul gui + vis knap
+    redigerElement.style.display = 'none';
+
+    refreshListe();
+
+    return false;
+})
+
+/*********** DELETE ************/
+
+// tilføj-element-knappen
+function registerSletKnapEvents() { // først når alle knapperne er loaded
+    var sletKnapper = document.querySelectorAll('.sletPost')
+    for (var i = 0; i < sletKnapper.length; i++) {
+        sletKnapper[i].addEventListener('click', function () {
+            // vis form
+            sletElement.style.display = 'block';
+
+            // READ DATA
+
+            var id = this.dataset.id;
+            var item = getItem(id);
+
+            sletID.value = item.ID;
+            sletNavn.value = item.navn;
+            sletLoen.value = item.loen;
+        })
+    }
+
+}
+
+removeItem.addEventListener('click', function () {
+    // insert
+
+    deleteItem(sletID.value);
+
+    sletID.value = '';
+    sletNavn.value = '';
+    sletLoen.value = '';
+
+    // skjul gui + vis knap
+    sletElement.style.display = 'none';
+
+    refreshListe();
+
+    return false;
+})
 
 
 /*********** LISTE ************/
@@ -168,6 +247,8 @@ function refreshListe(){
         liste.appendChild(newItem);
     }
     registerVisKnapEvents();
+    registerRedigerKnapEvents();
+    registerSletKnapEvents();
 }
 
 //document.addEventListener('DOMContentLoaded', refreshListe);
@@ -193,4 +274,14 @@ function getItem(id){
 function insertItem(navn, loen) {
     console.log("indsætter " + navn + loen);
     var stmt = db.run("INSERT INTO person (navn, loen) VALUES (?, ?)", [navn, loen]);
+}
+
+function updateItem(id, navn, loen) {
+    console.log("opdaterer " + id + navn + loen);
+    //var stmt = db.run("INSERT INTO person (navn, loen) VALUES (?, ?)", [navn, loen]);
+}
+
+function deleteItem(id) {
+    console.log("sletter " + id );
+    //var stmt = db.run("INSERT INTO person (navn, loen) VALUES (?, ?)", [navn, loen]);
 }
