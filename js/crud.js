@@ -30,6 +30,7 @@ function toBinString (arr) {
 window.onload = function () {
     console.log("loading...");
     db = new SQL.Database(toBinArray(localStorage.getItem('minDB')));
+    //db = new SQL.Database();
 }
 
 // når siden "unloades", dvs at brugeren navigerer væk eller lukker vinduet/fanen
@@ -81,12 +82,17 @@ add.addEventListener('click', function () {
 addNewItem.addEventListener('click', function () {
     // insert
 
-    // TODO noget sql via SQL.js
+    insertItem(nytID.value, nytNavn.value, nytLoen.value);
+
+    nytID.value = '';
+    nytNavn.value = '';
+    nytLoen.value = '';
 
     // skjul gui + vis knap
     nytElement.style.display = 'none';
     add.style.display = 'inline-block';
 
+    refreshListe();
 
     return false;
 })
@@ -116,11 +122,7 @@ function registerVisKnapEvents() { // først når alle knapperne er loaded
 
 }
 
-addNewItem.addEventListener('click', function () {
-    // insert
-
-    // TODO noget sql via SQL.js
-
+closeShowItem.addEventListener('click', function () {
     // skjul gui + vis knap
     visElement.style.display = 'none';
     //add.style.display = 'inline-block';
@@ -133,7 +135,19 @@ addNewItem.addEventListener('click', function () {
 /*********** LISTE ************/
 
 // refresh indhold når siden
-window.addEventListener('load', function(){
+function refreshListe(){
+
+    // Slet alt, undtagen li-template'en
+    liste.innerHTML = '<li class="template">'
+        + '<button class="visPost" data-id="0">Vis</button>'
+        + '<button class="redigerPost" data-id="0">Rediger</button>'
+        + '<button class="sletPost" data-id="0">Slet</button>'
+        + ''
+        + '<span class="dataitem" id="ID">#1</span>'
+        + '<span class="dataitem" id="navn">Børge</span>'
+        + '<span class="dataitem" id="loen">100.000</span>'
+        + '</li>';
+
     var stmt = loadAll();
     while(stmt.step())
     {
@@ -155,7 +169,8 @@ window.addEventListener('load', function(){
 
     registerVisKnapEvents();
 
-});
+}
+window.addEventListener('load', refreshListe());
 
 // **********************************************************************************************************
 // CRUD operationer
@@ -173,4 +188,9 @@ function getItem(id){
     var row = stmt.getAsObject({$id: Number(id)});
 
     return row;
+}
+
+function insertItem(id, navn, loen) {
+    console.log("indsætter " + id + navn + loen);
+    var stmt = db.run("INSERT INTO person (ID, navn, loen) VALUES (?, ?, ?)", [id, navn, loen]);
 }
