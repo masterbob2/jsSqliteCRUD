@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD demo</title>
+
+    <script src="js/sql.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Demo af 5 deles CRUD</h1>
+<p>
+    De fen dele består af <strong>C</strong>reate, <strong>R</strong>ead, <strong>U</strong>pdate og <strong>D</strong>elete. <br>
+    Desuden ser du her under en liste, som er en bekvæm måde at vælge databaseposter til Visning, Redigering eller Sletning.
+</p>
+<button id="add">Tilføj ny</button>
+
+<div id="nytElement" >
+
+    <form id="nytElementForm" onsubmit="return false">
+        <label for="nytID">ID</label>
+        <input type="text" id="nytID">
+        <br>
+        <label for="nytNavn">Navn</label>
+        <input type="text" id="nytNavn">
+        <br>
+        <label for="nytLoen">Årsløn</label>
+        <input type="number" id="nytLoen">
+        <br>
+        <input type="submit" id="addNewItem" value="Opret">
+    </form>
+
+</div>
+
+<div id="visElement" >
+
+    <form id="visForm" onsubmit="return false">
+        <label for="nytID">ID</label>
+        <input type="text" id="visID">
+        <br>
+        <label for="nytNavn">Navn</label>
+        <input type="text" id="visNavn">
+        <br>
+        <label for="nytLoen">Årsløn</label>
+        <input type="number" id="visLoen">
+        <br>
+        <input type="submit" id="closeShowItem" value="...tak">
+    </form>
+
+</div>
+
+<div id="redigerElement" >
+
+    <form id="redigerElementForm" onsubmit="return false">
+        <label for="nytID">ID</label>
+        <input type="text" id="nytID">
+        <br>
+        <label for="nytNavn">Navn</label>
+        <input type="text" id="nytNavn">
+        <br>
+        <label for="nytLoen">Årsløn</label>
+        <input type="number" id="nytLoen">
+        <br>
+        <input type="submit" id="storeItem" value="Gem">
+    </form>
+
+</div>
+
+<div id="sletElement" >
+
+    <form id="sletElementForm" onsubmit="return false">
+        <label for="nytID">ID</label>
+        <input type="text" id="nytID">
+        <br>
+        <label for="nytNavn">Navn</label>
+        <input type="text" id="nytNavn">
+        <br>
+        <label for="nytLoen">Årsløn</label>
+        <input type="number" id="nytLoen">
+        <br>
+        <input type="submit" id="deleteItem" value="Slet">
+    </form>
+
+</div>
+
+
+
+
+<ul id="liste">
+
+    <li class="template">
+        <button class="visPost" data-id="0">Vis</button>
+        <button class="redigerPost" data-id="0">Rediger</button>
+        <button class="sletPost" data-id="0">Slet</button>
+
+        <span class="dataitem" id="ID">#1</span>
+        <span class="dataitem" id="navn">Børge</span>
+        <span class="dataitem" id="loen">100.000</span>
+    </li>
+
+</ul>
+
+<script src="js/crud.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+
+
+div#nytElement,
+div#visElement,
+div#redigerElement,
+div#sletElement
+{
+    display:none;
+}
+
+ul#liste li.template {
+    display: none;
+}
