@@ -71,10 +71,18 @@ window.addEventListener('load', function () {
 // GUI events
 // **********************************************************************************************************
 
+function hideAllPanels() {
+    var panels = document.querySelectorAll('.panel');
+    for (var i = 0; i < panels.length; i++) {
+        panels[i].style.display = 'none';
+    }
+}
+
 /*********** CREATE ************/
 
 // tilføj-element-knappen
 add.addEventListener('click', function () {
+    hideAllPanels();
     // vis form + skjul knap
     nytElement.style.display = 'block';
     add.style.display = 'none';
@@ -108,6 +116,7 @@ function registerVisKnapEvents() { // først når alle knapperne er loaded
     for (var i = 0; i < visKnapper.length; i++) {
         visKnapper[i].addEventListener('click', function () {
             // vis form
+            hideAllPanels();
             visElement.style.display = 'block';
 
             // READ DATA
@@ -139,6 +148,7 @@ function registerRedigerKnapEvents() { // først når alle knapperne er loaded
     for (var i = 0; i < redigerKnapper.length; i++) {
         redigerKnapper[i].addEventListener('click', function () {
             // vis form
+            hideAllPanels();
             redigerElement.style.display = 'block';
 
             // READ DATA
@@ -179,6 +189,7 @@ function registerSletKnapEvents() { // først når alle knapperne er loaded
     for (var i = 0; i < sletKnapper.length; i++) {
         sletKnapper[i].addEventListener('click', function () {
             // vis form
+            hideAllPanels();
             sletElement.style.display = 'block';
 
             // READ DATA
@@ -223,9 +234,9 @@ function refreshListe(){
         + '<button class="redigerPost" data-id="0">Rediger</button>'
         + '<button class="sletPost" data-id="0">Slet</button>'
         + ''
-        + '<span class="dataitem" id="ID">#1</span>'
-        + '<span class="dataitem" id="navn">Børge</span>'
-        + '<span class="dataitem" id="loen">100.000</span>'
+        + '<span class="dataitem idField" id="ID">#1</span>'
+        + '<span class="dataitem textField" id="navn">Børge</span>'
+        + '<span class="dataitem numericField" id="loen">100.000</span>'
         + '</li>';
 
     var stmt = loadAll();
@@ -233,6 +244,8 @@ function refreshListe(){
     {
         var row = stmt.getAsObject();
         var newItem = liste.querySelector('li').cloneNode(true);
+
+        newItem.classList.remove('template');
 
         newItem.querySelector('.visPost').dataset.id = row.ID;
         newItem.querySelector('.redigerPost').dataset.id = row.ID;
@@ -250,8 +263,6 @@ function refreshListe(){
     registerRedigerKnapEvents();
     registerSletKnapEvents();
 }
-
-//document.addEventListener('DOMContentLoaded', refreshListe);
 
 // **********************************************************************************************************
 // CRUD operationer
