@@ -109,27 +109,18 @@ addNewItem.addEventListener('click', function () {
 /*********** READ ************/
 
 // vis-element-knappen
+function visPost() {            // vis form
+    hideAllPanels();
+    visElement.style.display = 'block';
 
+    // READ DATA
 
-function registerVisKnapEvents() { // først når alle knapperne er loaded
-    var visKnapper = document.querySelectorAll('.visPost')
-    for (var i = 0; i < visKnapper.length; i++) {
-        visKnapper[i].addEventListener('click', function () {
-            // vis form
-            hideAllPanels();
-            visElement.style.display = 'block';
+    var id = this.dataset.id;
+    var item = getItem(id);
 
-            // READ DATA
-
-            var id = this.dataset.id;
-            var item = getItem(id);
-
-            visID.value = item.ID;
-            visNavn.value = item.navn;
-            visLoen.value = item.loen;
-        })
-    }
-
+    visID.value = item.ID;
+    visNavn.value = item.navn;
+    visLoen.value = item.loen;
 }
 
 closeShowItem.addEventListener('click', function () {
@@ -142,26 +133,19 @@ closeShowItem.addEventListener('click', function () {
 
 /*********** UPDATE ************/
 
-// tilføj-element-knappen
-function registerRedigerKnapEvents() { // først når alle knapperne er loaded
-    var redigerKnapper = document.querySelectorAll('.redigerPost')
-    for (var i = 0; i < redigerKnapper.length; i++) {
-        redigerKnapper[i].addEventListener('click', function () {
-            // vis form
-            hideAllPanels();
-            redigerElement.style.display = 'block';
+function redigerPost() {
+    // vis form
+    hideAllPanels();
+    redigerElement.style.display = 'block';
 
-            // READ DATA
+    // READ DATA
 
-            var id = this.dataset.id;
-            var item = getItem(id);
+    var id = this.dataset.id;
+    var item = getItem(id);
 
-            redigerID.value = item.ID;
-            redigerNavn.value = item.navn;
-            redigerLoen.value = item.loen;
-        })
-    }
-
+    redigerID.value = item.ID;
+    redigerNavn.value = item.navn;
+    redigerLoen.value = item.loen;
 }
 
 storeItem.addEventListener('click', function () {
@@ -184,25 +168,19 @@ storeItem.addEventListener('click', function () {
 /*********** DELETE ************/
 
 // tilføj-element-knappen
-function registerSletKnapEvents() { // først når alle knapperne er loaded
-    var sletKnapper = document.querySelectorAll('.sletPost')
-    for (var i = 0; i < sletKnapper.length; i++) {
-        sletKnapper[i].addEventListener('click', function () {
-            // vis form
-            hideAllPanels();
-            sletElement.style.display = 'block';
+function sletPost() {
+    // vis form
+    hideAllPanels();
+    sletElement.style.display = 'block';
 
-            // READ DATA
+    // READ DATA
 
-            var id = this.dataset.id;
-            var item = getItem(id);
+    var id = this.dataset.id;
+    var item = getItem(id);
 
-            sletID.value = item.ID;
-            sletNavn.value = item.navn;
-            sletLoen.value = item.loen;
-        })
-    }
-
+    sletID.value = item.ID;
+    sletNavn.value = item.navn;
+    sletLoen.value = item.loen;
 }
 
 removeItem.addEventListener('click', function () {
@@ -247,9 +225,17 @@ function refreshListe(){
 
         newItem.classList.remove('template');
 
-        newItem.querySelector('.visPost').dataset.id = row.ID;
-        newItem.querySelector('.redigerPost').dataset.id = row.ID;
-        newItem.querySelector('.sletPost').dataset.id = row.ID;
+        var visPostKnap = newItem.querySelector('.visPost');
+            visPostKnap.dataset.id = row.ID;
+            visPostKnap.addEventListener('click', visPost);
+
+        var redigerPostKnap = newItem.querySelector('.redigerPost');
+            redigerPostKnap.dataset.id = row.ID;
+            redigerPostKnap.addEventListener('click', redigerPost);
+
+        var sletPostKnap = newItem.querySelector('.sletPost');
+            sletPostKnap.dataset.id = row.ID;
+            sletPostKnap.addEventListener('click', sletPost);
 
         newItem.children.ID.innerText = row.ID;
         newItem.children.navn.innerText = row.navn;
@@ -259,9 +245,6 @@ function refreshListe(){
 
         liste.appendChild(newItem);
     }
-    registerVisKnapEvents();
-    registerRedigerKnapEvents();
-    registerSletKnapEvents();
 }
 
 // **********************************************************************************************************
