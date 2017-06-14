@@ -11,3 +11,23 @@ div#sletElement
 ul#liste li.template {
     display: none;
 }
+
+ul#liste li span {
+    display: inline-block;
+    width: 5em;
+    margin-right: 1em;
+}
+
+ul#liste li span.idField {
+    width: 3em;
+    text-align: right;
+}
+
+ul#liste li span.idField:before {
+    content: '#';
+}
+
+ul#liste li span.numericField {
+    width: 3em;
+    text-align: right;
+}

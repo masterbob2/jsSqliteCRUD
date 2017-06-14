@@ -27,16 +27,17 @@ function toBinString (arr) {
 
 
 // når siden loades
-window.onload = function () {
+window.addEventListener('load', function () {
     console.log("loading...");
     db = new SQL.Database(toBinArray(localStorage.getItem('minDB')));
-}
+    //db = new SQL.Database();
+})
 
 // når siden "unloades", dvs at brugeren navigerer væk eller lukker vinduet/fanen
-window.onunload = function () {
+window.addEventListener('unload', function () {
     console.log("UNloading ...")
     localStorage.setItem('minDB', toBinString(db.export()) );
-}
+})
 
 window.addEventListener('load', function () {
     console.log("delayed running...")
@@ -45,7 +46,7 @@ window.addEventListener('load', function () {
 
     //Create the database
     // Run a query without reading the results
-    db.run("CREATE TABLE IF NOT EXISTS person (ID primary key, navn, loen);");
+    db.run("CREATE TABLE IF NOT EXISTS person (ID INTEGER primary key autoincrement, navn varchar(80), loen decimal);");
     // Insert two rows: (1,111) and (2,222)
     db.run("INSERT OR REPLACE INTO person VALUES (?, ?, ?), (?, ?, ?)",
         [   1, "Børge", 100000,
@@ -63,16 +64,25 @@ window.addEventListener('load', function () {
 
         console.log(JSON.stringify(row));
     }
+    refreshListe();
 });
 
 // **********************************************************************************************************
 // GUI events
 // **********************************************************************************************************
 
+function hideAllPanels() {
+    var panels = document.querySelectorAll('.panel');
+    for (var i = 0; i < panels.length; i++) {
+        panels[i].style.display = 'none';
+    }
+}
+
 /*********** CREATE ************/
 
 // tilføj-element-knappen
 add.addEventListener('click', function () {
+    hideAllPanels();
     // vis form + skjul knap
     nytElement.style.display = 'block';
     add.style.display = 'none';
@@ -81,12 +91,17 @@ add.addEventListener('click', function () {
 addNewItem.addEventListener('click', function () {
     // insert
 
-    // TODO noget sql via SQL.js
+    insertItem(nytNavn.value, nytLoen.value);
+
+    //nytID.value = '';
+    nytNavn.value = '';
+    nytLoen.value = '';
 
     // skjul gui + vis knap
     nytElement.style.display = 'none';
     add.style.display = 'inline-block';
 
+    refreshListe();
 
     return false;
 })
@@ -94,33 +109,21 @@ addNewItem.addEventListener('click', function () {
 /*********** READ ************/
 
 // vis-element-knappen
+function visPost() {            // vis form
+    hideAllPanels();
+    visElement.style.display = 'block';
 
+    // READ DATA
 
-function registerVisKnapEvents() { // først når alle knapperne er loaded
-    var visKnapper = document.querySelectorAll('.visPost')
-    for (var i = 0; i < visKnapper.length; i++) {
-        visKnapper[i].addEventListener('click', function () {
-            // vis form
-            visElement.style.display = 'block';
+    var id = this.dataset.id;
+    var item = getItem(id);
 
-            // READ DATA
-
-            var id = this.dataset.id;
-            var item = getItem(id);
-
-            visID.value = item.ID;
-            visNavn.value = item.navn;
-            visLoen.value = item.loen;
-        })
-    }
-
+    visID.value = item.ID;
+    visNavn.value = item.navn;
+    visLoen.value = item.loen;
 }
 
-addNewItem.addEventListener('click', function () {
-    // insert
-
-    // TODO noget sql via SQL.js
-
+closeShowItem.addEventListener('click', function () {
     // skjul gui + vis knap
     visElement.style.display = 'none';
     //add.style.display = 'inline-block';
@@ -128,21 +131,111 @@ addNewItem.addEventListener('click', function () {
     return false;
 })
 
+/*********** UPDATE ************/
+
+function redigerPost() {
+    // vis form
+    hideAllPanels();
+    redigerElement.style.display = 'block';
+
+    // READ DATA
+
+    var id = this.dataset.id;
+    var item = getItem(id);
+
+    redigerID.value = item.ID;
+    redigerNavn.value = item.navn;
+    redigerLoen.value = item.loen;
+}
+
+storeItem.addEventListener('click', function () {
+    // insert
+
+    updateItem(redigerID.value, redigerNavn.value, redigerLoen.value);
+
+    redigerID.value = '';
+    redigerNavn.value = '';
+    redigerLoen.value = '';
+
+    // skjul gui + vis knap
+    redigerElement.style.display = 'none';
+
+    refreshListe();
+
+    return false;
+})
+
+/*********** DELETE ************/
+
+// tilføj-element-knappen
+function sletPost() {
+    // vis form
+    hideAllPanels();
+    sletElement.style.display = 'block';
+
+    // READ DATA
+
+    var id = this.dataset.id;
+    var item = getItem(id);
+
+    sletID.value = item.ID;
+    sletNavn.value = item.navn;
+    sletLoen.value = item.loen;
+}
+
+removeItem.addEventListener('click', function () {
+    // insert
+
+    deleteItem(sletID.value);
+
+    sletID.value = '';
+    sletNavn.value = '';
+    sletLoen.value = '';
+
+    // skjul gui + vis knap
+    sletElement.style.display = 'none';
+
+    refreshListe();
+
+    return false;
+})
 
 
 /*********** LISTE ************/
 
 // refresh indhold når siden
-window.addEventListener('load', function(){
+function refreshListe(){
+    console.log("refreshing liste");
+    // Slet alt, undtagen li-template'en
+    liste.innerHTML = '<li class="template">'
+        + '<button class="visPost" data-id="0">Vis</button>'
+        + '<button class="redigerPost" data-id="0">Rediger</button>'
+        + '<button class="sletPost" data-id="0">Slet</button>'
+        + ''
+        + '<span class="dataitem idField" id="ID">#1</span>'
+        + '<span class="dataitem textField" id="navn">Børge</span>'
+        + '<span class="dataitem numericField" id="loen">100.000</span>'
+        + '</li>';
+
     var stmt = loadAll();
     while(stmt.step())
     {
         var row = stmt.getAsObject();
         var newItem = liste.querySelector('li').cloneNode(true);
 
-        newItem.querySelector('.visPost').dataset.id = row.ID;
-        newItem.querySelector('.redigerPost').dataset.id = row.ID;
-        newItem.querySelector('.sletPost').dataset.id = row.ID;
+        newItem.classList.remove('template');
+
+        var visPostKnap = newItem.querySelector('.visPost');
+            visPostKnap.dataset.id = row.ID;
+            visPostKnap.addEventListener('click', visPost);
+
+        var redigerPostKnap = newItem.querySelector('.redigerPost');
+            redigerPostKnap.dataset.id = row.ID;
+            redigerPostKnap.addEventListener('click', redigerPost);
+
+        var sletPostKnap = newItem.querySelector('.sletPost');
+            sletPostKnap.dataset.id = row.ID;
+            sletPostKnap.addEventListener('click', sletPost);
 
         newItem.children.ID.innerText = row.ID;
         newItem.children.navn.innerText = row.navn;
@@ -152,10 +245,7 @@ window.addEventListener('load', function(){
 
         liste.appendChild(newItem);
     }
-
-    registerVisKnapEvents();
-
-});
+}
 
 // **********************************************************************************************************
 // CRUD operationer
@@ -173,4 +263,19 @@ function getItem(id){
     var row = stmt.getAsObject({$id: Number(id)});
 
     return row;
+}
+
+function insertItem(navn, loen) {
+    console.log("indsætter " + navn + loen);
+    var stmt = db.run("INSERT INTO person (navn, loen) VALUES (?, ?)", [navn, loen]);
+}
+
+function updateItem(id, navn, loen) {
+    console.log("opdaterer " + id + navn + loen);
+    //var stmt = db.run("INSERT INTO person (navn, loen) VALUES (?, ?)", [navn, loen]);
+}
+
+function deleteItem(id) {
+    console.log("sletter " + id );
+    //var stmt = db.run("INSERT INTO person (navn, loen) VALUES (?, ?)", [navn, loen]);
 }

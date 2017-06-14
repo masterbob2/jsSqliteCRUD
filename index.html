@@ -17,12 +17,9 @@
 </p>
 <button id="add">Tilføj ny</button>
 
-<div id="nytElement" >
+<div id="nytElement" class="panel">
 
     <form id="nytElementForm" onsubmit="return false">
-        <label for="nytID">ID</label>
-        <input type="text" id="nytID">
-        <br>
         <label for="nytNavn">Navn</label>
         <input type="text" id="nytNavn">
         <br>
@@ -34,53 +31,53 @@
 
 </div>
 
-<div id="visElement" >
+<div id="visElement" class="panel">
 
     <form id="visForm" onsubmit="return false">
-        <label for="nytID">ID</label>
-        <input type="text" id="visID">
+        <label for="visID">ID</label>
+        <input type="text" id="visID" readonly>
         <br>
-        <label for="nytNavn">Navn</label>
-        <input type="text" id="visNavn">
+        <label for="visNavn">Navn</label>
+        <input type="text" id="visNavn" readonly>
         <br>
-        <label for="nytLoen">Årsløn</label>
-        <input type="number" id="visLoen">
+        <label for="visLoen">Årsløn</label>
+        <input type="number" id="visLoen" readonly>
         <br>
         <input type="submit" id="closeShowItem" value="...tak">
     </form>
 
 </div>
 
-<div id="redigerElement" >
+<div id="redigerElement" class="panel" >
 
     <form id="redigerElementForm" onsubmit="return false">
-        <label for="nytID">ID</label>
-        <input type="text" id="nytID">
+        <label for="redigerID">ID</label>
+        <input type="text" id="redigerID" readonly>
         <br>
-        <label for="nytNavn">Navn</label>
-        <input type="text" id="nytNavn">
+        <label for="redigerNavn">Navn</label>
+        <input type="text" id="redigerNavn">
         <br>
-        <label for="nytLoen">Årsløn</label>
-        <input type="number" id="nytLoen">
+        <label for="redigerLoen">Årsløn</label>
+        <input type="number" id="redigerLoen">
         <br>
         <input type="submit" id="storeItem" value="Gem">
     </form>
 
 </div>
 
-<div id="sletElement" >
+<div id="sletElement" class="panel" >
 
     <form id="sletElementForm" onsubmit="return false">
-        <label for="nytID">ID</label>
-        <input type="text" id="nytID">
+        <label for="sletID">ID</label>
+        <input type="text" id="sletID" readonly>
         <br>
-        <label for="nytNavn">Navn</label>
-        <input type="text" id="nytNavn">
+        <label for="sletNavn">Navn</label>
+        <input type="text" id="sletNavn" readonly>
         <br>
-        <label for="nytLoen">Årsløn</label>
-        <input type="number" id="nytLoen">
+        <label for="sletLoen">Årsløn</label>
+        <input type="number" id="sletLoen" readonly>
         <br>
-        <input type="submit" id="deleteItem" value="Slet">
+        <input type="submit" id="removeItem" value="Slet">
     </form>
 
 </div>
@@ -89,16 +86,6 @@
 
 
 <ul id="liste">
-
-    <li class="template">
-        <button class="visPost" data-id="0">Vis</button>
-        <button class="redigerPost" data-id="0">Rediger</button>
-        <button class="sletPost" data-id="0">Slet</button>
-
-        <span class="dataitem" id="ID">#1</span>
-        <span class="dataitem" id="navn">Børge</span>
-        <span class="dataitem" id="loen">100.000</span>
-    </li>
 
 </ul>
 
